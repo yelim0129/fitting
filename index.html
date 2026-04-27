@@ -11,18 +11,22 @@
 
 body {
   margin: 0;
-  font-family: 'Arial', sans-serif;
-  text-align: center;
+  font-family: Arial, sans-serif;
   color: white;
-  background:
-    radial-gradient(circle at top left, #7c8cff 0, transparent 35%),
-    radial-gradient(circle at bottom right, #ff9acb 0, transparent 30%),
-    linear-gradient(135deg, #12152f, #252a63, #101426);
+  text-align: center;
   min-height: 100vh;
+
+  background:
+    linear-gradient(rgba(10, 15, 35, 0.55), rgba(10, 15, 35, 0.65)),
+    url("cafe-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .header {
-  padding: 35px 20px 15px;
+  padding: 24px 20px 10px;
+  text-shadow: 0 3px 12px rgba(0,0,0,0.6);
 }
 
 h1 {
@@ -32,45 +36,69 @@ h1 {
 }
 
 .subtitle {
-  margin-top: 10px;
-  color: #dfe4ff;
+  margin-top: 8px;
+  color: #eef2ff;
 }
 
 .container {
   width: 90%;
   max-width: 980px;
-  margin: 20px auto;
-  padding: 25px;
+  margin: 15px auto 40px;
+  padding: 20px;
   border-radius: 28px;
-  background: rgba(255,255,255,0.13);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.16);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.32);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.45);
 }
 
-.upload-box {
-  margin-bottom: 20px;
+/* 위쪽 버튼 영역 */
+.top-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.18);
 }
 
 input {
-  padding: 12px;
+  padding: 11px;
   background: white;
   color: #222;
-  border-radius: 14px;
+  border-radius: 999px;
+  border: none;
+}
+
+button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #4d6cff, #8f6bff);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+}
+
+button:hover {
+  transform: translateY(-2px);
 }
 
 #stage {
   width: 360px;
   height: 520px;
-  margin: 20px auto;
+  margin: 0 auto;
   position: relative;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.95), rgba(225,232,255,0.95));
-  border: 4px solid rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.92);
+  border: 4px solid rgba(255,255,255,0.85);
   border-radius: 28px;
   overflow: hidden;
-  box-shadow: inset 0 0 30px rgba(90,100,255,0.25),
-              0 15px 35px rgba(0,0,0,0.35);
+  box-shadow:
+    inset 0 0 30px rgba(80,100,255,0.25),
+    0 16px 40px rgba(0,0,0,0.45);
 }
 
 #stage::before {
@@ -82,6 +110,7 @@ input {
   font-weight: bold;
   color: rgba(60,70,160,0.25);
   letter-spacing: 3px;
+  z-index: 1;
 }
 
 #user, #costume {
@@ -96,32 +125,18 @@ input {
   left: 75px;
   top: 130px;
   cursor: grab;
+  z-index: 3;
 }
 
-.buttons {
-  margin-top: 20px;
-}
-
-button {
-  margin: 7px;
-  padding: 12px 18px;
-  border: none;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #6d7cff, #ff7abc);
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
-}
-
-button:hover {
-  transform: translateY(-2px);
+#user {
+  z-index: 2;
 }
 
 .info {
-  margin-top: 18px;
-  color: #e8ebff;
+  margin-top: 14px;
+  color: #f3f5ff;
   font-size: 14px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 </style>
 </head>
@@ -130,13 +145,20 @@ button:hover {
 
 <div class="header">
   <h1>LIMIT ZERO BREAKERS CAFE</h1>
-  <p class="subtitle">캐릭터 의상 피팅 체험</p>
+  <p class="subtitle">잠공정 카페 의상 피팅 체험</p>
 </div>
 
 <div class="container">
-  <div class="upload-box">
-    <p>내 사진을 업로드하고 캐릭터 의상을 입혀보세요</p>
+
+  <div class="top-controls">
     <input type="file" id="upload" accept="image/*">
+
+    <button onclick="changeCostume('shion.png')">시온 의상</button>
+    <button onclick="changeCostume('kaito.png')">카이토 의상</button>
+    <button onclick="changeCostume('liz.png')">리즈 의상</button>
+
+    <button onclick="makeBigger()">크게</button>
+    <button onclick="makeSmaller()">작게</button>
   </div>
 
   <div id="stage">
@@ -144,15 +166,8 @@ button:hover {
     <img id="costume">
   </div>
 
-  <div class="buttons">
-    <button onclick="changeCostume('shion.png')">시온 의상</button>
-    <button onclick="changeCostume('kaito.png')">카이토 의상</button>
-    <button onclick="changeCostume('liz.png')">리즈 의상</button>
-    <button onclick="makeBigger()">크게</button>
-    <button onclick="makeSmaller()">작게</button>
-  </div>
-
   <p class="info">의상을 마우스로 끌어서 위치를 조절할 수 있습니다.</p>
+
 </div>
 
 <script>
