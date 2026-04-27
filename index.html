@@ -5,9 +5,7 @@
 <title>LIMIT ZERO BREAKERS FITTING</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -15,9 +13,8 @@ body {
   color: white;
   text-align: center;
   min-height: 100vh;
-
   background:
-    linear-gradient(rgba(10, 15, 35, 0.55), rgba(10, 15, 35, 0.65)),
+    linear-gradient(rgba(10, 15, 35, 0.55), rgba(10, 15, 35, 0.7)),
     url("cafe-bg.png");
   background-size: cover;
   background-position: center;
@@ -26,65 +23,56 @@ body {
 
 .header {
   padding: 24px 20px 10px;
-  text-shadow: 0 3px 12px rgba(0,0,0,0.6);
+  text-shadow: 0 3px 12px rgba(0,0,0,0.7);
 }
 
-h1 {
-  margin: 0;
-  font-size: 34px;
-  letter-spacing: 2px;
-}
+h1 { margin: 0; font-size: 34px; letter-spacing: 2px; }
+.subtitle { margin-top: 8px; color: #eef2ff; }
 
-.subtitle {
-  margin-top: 8px;
-  color: #eef2ff;
-}
-
-.container {
-  width: 90%;
-  max-width: 980px;
-  margin: 15px auto 40px;
-  padding: 20px;
-  border-radius: 28px;
-  background: rgba(255,255,255,0.16);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.32);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.45);
-}
-
-/* 위쪽 버튼 영역 */
 .top-controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 18px;
+  width: 90%;
+  max-width: 1050px;
+  margin: 15px auto;
   padding: 14px;
   border-radius: 22px;
   background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(10px);
 }
 
-input {
-  padding: 11px;
-  background: white;
-  color: #222;
+input, button {
+  margin: 6px;
+  padding: 11px 16px;
   border-radius: 999px;
   border: none;
 }
 
 button {
-  padding: 12px 18px;
-  border: none;
-  border-radius: 999px;
   background: linear-gradient(135deg, #4d6cff, #8f6bff);
   color: white;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.28);
 }
 
-button:hover {
-  transform: translateY(-2px);
+.main {
+  width: 90%;
+  max-width: 1050px;
+  margin: 15px auto 40px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.fitting-box, .closet {
+  background: rgba(255,255,255,0.16);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+}
+
+.fitting-box {
+  padding: 22px;
+  width: 430px;
 }
 
 #stage {
@@ -96,9 +84,6 @@ button:hover {
   border: 4px solid rgba(255,255,255,0.85);
   border-radius: 28px;
   overflow: hidden;
-  box-shadow:
-    inset 0 0 30px rgba(80,100,255,0.25),
-    0 16px 40px rgba(0,0,0,0.45);
 }
 
 #stage::before {
@@ -120,6 +105,8 @@ button:hover {
   max-width: 100%;
 }
 
+#user { z-index: 2; }
+
 #costume {
   width: 210px;
   left: 75px;
@@ -128,15 +115,73 @@ button:hover {
   z-index: 3;
 }
 
-#user {
-  z-index: 2;
+.closet {
+  width: 540px;
+  padding: 20px;
+  text-align: left;
+}
+
+.closet-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.closet-sub {
+  font-size: 14px;
+  color: #e8ebff;
+  margin-bottom: 18px;
+}
+
+.category {
+  margin-bottom: 18px;
+}
+
+.category h3 {
+  margin: 0 0 10px;
+  padding-left: 8px;
+  border-left: 4px solid #a992ff;
+}
+
+.items {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.item {
+  width: 105px;
+  height: 125px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 16px;
+  padding: 8px;
+  text-align: center;
+  color: #222;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+.item img {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+}
+
+.item p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .info {
   margin-top: 14px;
   color: #f3f5ff;
   font-size: 14px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 </style>
 </head>
@@ -148,25 +193,63 @@ button:hover {
   <p class="subtitle">잠공정 카페 의상 피팅 체험</p>
 </div>
 
-<div class="container">
+<div class="top-controls">
+  <input type="file" id="upload" accept="image/*">
+  <button onclick="makeBigger()">의상 크게</button>
+  <button onclick="makeSmaller()">의상 작게</button>
+  <button onclick="resetCostume()">리셋</button>
+</div>
 
-  <div class="top-controls">
-    <input type="file" id="upload" accept="image/*">
+<div class="main">
 
-    <button onclick="changeCostume('shion.png')">시온 의상</button>
-    <button onclick="changeCostume('kaito.png')">카이토 의상</button>
-    <button onclick="changeCostume('liz.png')">리즈 의상</button>
-
-    <button onclick="makeBigger()">크게</button>
-    <button onclick="makeSmaller()">작게</button>
+  <div class="fitting-box">
+    <div id="stage">
+      <img id="user">
+      <img id="costume">
+    </div>
+    <p class="info">의상을 마우스로 끌어서 위치를 조절할 수 있습니다.</p>
   </div>
 
-  <div id="stage">
-    <img id="user">
-    <img id="costume">
-  </div>
+  <div class="closet">
+    <div class="closet-title">COSTUME CLOSET</div>
+    <div class="closet-sub">캐릭터 의상을 선택해 피팅해보세요.</div>
 
-  <p class="info">의상을 마우스로 끌어서 위치를 조절할 수 있습니다.</p>
+    <div class="category">
+      <h3>캐릭터 의상</h3>
+      <div class="items">
+        <div class="item" onclick="changeCostume('shion.png')">
+          <img src="shion.png">
+          <p>시온</p>
+        </div>
+
+        <div class="item" onclick="changeCostume('kaito.png')">
+          <img src="kaito.png">
+          <p>카이토</p>
+        </div>
+
+        <div class="item" onclick="changeCostume('liz.png')">
+          <img src="liz.png">
+          <p>리즈</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="category">
+      <h3>기능</h3>
+      <div class="items">
+        <div class="item" onclick="makeBigger()">
+          <p>크게</p>
+        </div>
+        <div class="item" onclick="makeSmaller()">
+          <p>작게</p>
+        </div>
+        <div class="item" onclick="resetCostume()">
+          <p>리셋</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
 </div>
 
@@ -191,6 +274,14 @@ function makeBigger() {
 
 function makeSmaller() {
   costumeSize -= 20;
+  costume.style.width = costumeSize + "px";
+}
+
+function resetCostume() {
+  costume.src = "";
+  costume.style.left = "75px";
+  costume.style.top = "130px";
+  costumeSize = 210;
   costume.style.width = costumeSize + "px";
 }
 
