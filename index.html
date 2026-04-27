@@ -1,312 +1,364 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>LIMIT ZERO BREAKERS FITTING</title>
+  <meta charset="UTF-8">
+  <title>Liz Fitting Room</title>
 
-<style>
-* { box-sizing: border-box; }
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-image: url("cafe-bg.png");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+      text-align: center;
+    }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  color: white;
-  text-align: center;
-  min-height: 100vh;
-  background:
-    linear-gradient(rgba(10, 15, 35, 0.55), rgba(10, 15, 35, 0.7)),
-    url("cafe-bg.png");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: -1;
+    }
 
-.header {
-  padding: 24px 20px 10px;
-  text-shadow: 0 3px 12px rgba(0,0,0,0.7);
-}
+    header {
+      padding: 18px;
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 0 2px 8px black;
+    }
 
-h1 { margin: 0; font-size: 34px; letter-spacing: 2px; }
-.subtitle { margin-top: 8px; color: #eef2ff; }
+    .controls {
+      margin: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-.top-controls {
-  width: 90%;
-  max-width: 1050px;
-  margin: 15px auto;
-  padding: 14px;
-  border-radius: 22px;
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(10px);
-}
+    button,
+    .file-button {
+      background: rgba(40, 40, 40, 0.9);
+      color: white;
+      border: 1px solid white;
+      border-radius: 8px;
+      padding: 9px 15px;
+      cursor: pointer;
+      font-size: 15px;
+    }
 
-input, button {
-  margin: 6px;
-  padding: 11px 16px;
-  border-radius: 999px;
-  border: none;
-}
+    #photoInput {
+      display: none;
+    }
 
-button {
-  background: linear-gradient(135deg, #4d6cff, #8f6bff);
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 25px;
+      padding: 20px;
+      flex-wrap: wrap;
+    }
 
-.main {
-  width: 90%;
-  max-width: 1050px;
-  margin: 15px auto 40px;
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-}
+    .fitting-area {
+      position: relative;
+      width: 380px;
+      height: 540px;
+      background: rgba(20, 20, 20, 0.72);
+      border: 3px solid white;
+      border-radius: 16px;
+      overflow: hidden;
+    }
 
-.fitting-box, .closet {
-  background: rgba(255,255,255,0.16);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.35);
-  border-radius: 28px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.45);
-}
+    #placeholder {
+      position: absolute;
+      width: 100%;
+      top: 48%;
+      left: 0;
+      transform: translateY(-50%);
+      color: #ddd;
+      font-size: 18px;
+      z-index: 0;
+    }
 
-.fitting-box {
-  padding: 22px;
-  width: 430px;
-}
+    #userPhoto {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      left: 0;
+      top: 0;
+      z-index: 1;
+    }
 
-#stage {
-  width: 360px;
-  height: 520px;
-  margin: 0 auto;
-  position: relative;
-  background: rgba(255,255,255,0.92);
-  border: 4px solid rgba(255,255,255,0.85);
-  border-radius: 28px;
-  overflow: hidden;
-}
+    .wear-item {
+      position: absolute;
+      width: 180px;
+      z-index: 2;
+      cursor: move;
+      user-select: none;
+      touch-action: none;
+    }
 
-#stage::before {
-  content: "FITTING ROOM";
-  position: absolute;
-  top: 15px;
-  left: 0;
-  right: 0;
-  font-weight: bold;
-  color: rgba(60,70,160,0.25);
-  letter-spacing: 3px;
-  z-index: 1;
-}
+    #accessory { left: 145px; top: 80px; }
+    #top { left: 100px; top: 190px; }
+    #bottom { left: 105px; top: 300px; }
+    #gloves { left: 85px; top: 240px; }
+    #shoes { left: 120px; top: 420px; }
 
-#user, #costume {
-  position: absolute;
-  top: 0;
-  left: 0;
-  max-width: 100%;
-}
+    .closet {
+      width: 360px;
+      min-height: 540px;
+      border: 3px solid white;
+      border-radius: 16px;
+      padding: 16px;
+      box-sizing: border-box;
+      background: rgba(0, 0, 0, 0.6);
+    }
 
-#user { z-index: 2; }
+    .closet h2 {
+      margin-top: 0;
+      text-shadow: 0 2px 6px black;
+    }
 
-#costume {
-  width: 210px;
-  left: 75px;
-  top: 130px;
-  cursor: grab;
-  z-index: 3;
-}
+    .category {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
 
-.closet {
-  width: 540px;
-  padding: 20px;
-  text-align: left;
-}
+    .category-title {
+      text-align: left;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
 
-.closet-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
+    .items {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-.closet-sub {
-  font-size: 14px;
-  color: #e8ebff;
-  margin-bottom: 18px;
-}
+    .item {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: 5px;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
 
-.category {
-  margin-bottom: 18px;
-}
+    .item:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 12px white;
+    }
 
-.category h3 {
-  margin: 0 0 10px;
-  padding-left: 8px;
-  border-left: 4px solid #a992ff;
-}
-
-.items {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.item {
-  width: 105px;
-  height: 125px;
-  background: rgba(255,255,255,0.9);
-  border-radius: 16px;
-  padding: 8px;
-  text-align: center;
-  color: #222;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-}
-
-.item img {
-  width: 85px;
-  height: 85px;
-  object-fit: contain;
-}
-
-.item p {
-  margin: 4px 0 0;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.info {
-  margin-top: 14px;
-  color: #f3f5ff;
-  font-size: 14px;
-}
-</style>
+    .item.selected {
+      border: 2px solid #ffe866;
+      box-shadow: 0 0 16px #ffe866;
+      background: rgba(255, 232, 102, 0.25);
+    }
+  </style>
 </head>
 
 <body>
+  <header>LIMIT ZERO BREAKERS - LIZ FITTING ROOM</header>
 
-<div class="header">
-  <h1>LIMIT ZERO BREAKERS CAFE</h1>
-  <p class="subtitle">잠공정 카페 의상 피팅 체험</p>
-</div>
+  <div class="controls">
+    <label for="photoInput" class="file-button">내 사진</label>
+    <input type="file" id="photoInput" accept="image/*">
 
-<div class="top-controls">
-  <input type="file" id="upload" accept="image/*">
-  <button onclick="makeBigger()">의상 크게</button>
-  <button onclick="makeSmaller()">의상 작게</button>
-  <button onclick="resetCostume()">리셋</button>
-</div>
-
-<div class="main">
-
-  <div class="fitting-box">
-    <div id="stage">
-      <img id="user">
-      <img id="costume">
-    </div>
-    <p class="info">의상을 마우스로 끌어서 위치를 조절할 수 있습니다.</p>
+    <button onclick="changeSize(10)">+</button>
+    <button onclick="changeSize(-10)">-</button>
+    <button onclick="resetAll()">Reset</button>
   </div>
 
-  <div class="closet">
-    <div class="closet-title">COSTUME CLOSET</div>
-    <div class="closet-sub">캐릭터 의상을 선택해 피팅해보세요.</div>
+  <div class="main">
+    <div class="fitting-area">
+      <div id="placeholder">내 사진을 넣어주세요</div>
+      <img id="userPhoto">
 
-    <div class="category">
-      <h3>캐릭터 의상</h3>
-      <div class="items">
-        <div class="item" onclick="changeCostume('shion.png')">
-          <img src="shion.png">
-          <p>시온</p>
+      <img id="accessory" class="wear-item">
+      <img id="shoes" class="wear-item">
+      <img id="gloves" class="wear-item">
+      <img id="top" class="wear-item">
+      <img id="bottom" class="wear-item">
+    </div>
+
+    <div class="closet">
+      <h2>Liz Closet</h2>
+
+      <div class="category">
+        <div class="category-title">악세서리</div>
+        <div class="items">
+          <img class="item" src="assets/liz/accessory/accessory1.png" onclick="wear('accessory', this, 90)">
         </div>
+      </div>
 
-        <div class="item" onclick="changeCostume('kaito.png')">
-          <img src="kaito.png">
-          <p>카이토</p>
+      <div class="category">
+        <div class="category-title">신발</div>
+        <div class="items">
+          <img class="item" src="assets/liz/shoes/shoes1.png" onclick="wear('shoes', this, 140)">
         </div>
+      </div>
 
-        <div class="item" onclick="changeCostume('liz.png')">
-          <img src="liz.png">
-          <p>리즈</p>
+      <div class="category">
+        <div class="category-title">장갑</div>
+        <div class="items">
+          <img class="item" src="assets/liz/gloves/gloves1.png" onclick="wear('gloves', this, 170)">
+        </div>
+      </div>
+
+      <div class="category">
+        <div class="category-title">상의</div>
+        <div class="items">
+          <img class="item" src="assets/liz/top/top1.png" onclick="wear('top', this, 190)">
+        </div>
+      </div>
+
+      <div class="category">
+        <div class="category-title">하의</div>
+        <div class="items">
+          <img class="item" src="assets/liz/bottom/bottom1.png" onclick="wear('bottom', this, 180)">
         </div>
       </div>
     </div>
-
-    <div class="category">
-      <h3>기능</h3>
-      <div class="items">
-        <div class="item" onclick="makeBigger()">
-          <p>크게</p>
-        </div>
-        <div class="item" onclick="makeSmaller()">
-          <p>작게</p>
-        </div>
-        <div class="item" onclick="resetCostume()">
-          <p>리셋</p>
-        </div>
-      </div>
-    </div>
-
   </div>
 
-</div>
+  <script>
+    let selectedWearItem = null;
 
-<script>
-const user = document.getElementById("user");
-const costume = document.getElementById("costume");
+    const photoInput = document.getElementById("photoInput");
+    const userPhoto = document.getElementById("userPhoto");
+    const placeholder = document.getElementById("placeholder");
 
-document.getElementById("upload").onchange = function(e) {
-  user.src = URL.createObjectURL(e.target.files[0]);
-};
+    photoInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (!file) return;
 
-function changeCostume(fileName) {
-  costume.src = fileName;
-}
+      userPhoto.src = URL.createObjectURL(file);
+      placeholder.style.display = "none";
+    });
 
-let costumeSize = 210;
+    function wear(part, clickedItem, size) {
+      const target = document.getElementById(part);
 
-function makeBigger() {
-  costumeSize += 20;
-  costume.style.width = costumeSize + "px";
-}
+      target.src = clickedItem.src;
+      target.style.width = size + "px";
+      selectedWearItem = target;
 
-function makeSmaller() {
-  costumeSize -= 20;
-  costume.style.width = costumeSize + "px";
-}
+      const category = clickedItem.closest(".category");
+      category.querySelectorAll(".item").forEach(item => {
+        item.classList.remove("selected");
+      });
 
-function resetCostume() {
-  costume.src = "";
-  costume.style.left = "75px";
-  costume.style.top = "130px";
-  costumeSize = 210;
-  costume.style.width = costumeSize + "px";
-}
+      clickedItem.classList.add("selected");
+    }
 
-let dragging = false;
-let offsetX = 0;
-let offsetY = 0;
+    function changeSize(amount) {
+      if (!selectedWearItem) return;
 
-costume.onmousedown = function(e) {
-  dragging = true;
-  offsetX = e.offsetX;
-  offsetY = e.offsetY;
-};
+      const nowWidth = selectedWearItem.offsetWidth;
+      let newWidth = nowWidth + amount;
 
-document.onmouseup = function() {
-  dragging = false;
-};
+      if (newWidth < 40) newWidth = 40;
+      if (newWidth > 500) newWidth = 500;
 
-document.onmousemove = function(e) {
-  if (dragging) {
-    const stage = document.getElementById("stage").getBoundingClientRect();
-    costume.style.left = (e.clientX - stage.left - offsetX) + "px";
-    costume.style.top = (e.clientY - stage.top - offsetY) + "px";
-  }
-};
-</script>
+      selectedWearItem.style.width = newWidth + "px";
+    }
 
+    function resetAll() {
+      document.querySelectorAll(".wear-item").forEach(item => {
+        item.removeAttribute("src");
+      });
+
+      document.querySelectorAll(".item").forEach(item => {
+        item.classList.remove("selected");
+      });
+
+      document.getElementById("accessory").style.left = "145px";
+      document.getElementById("accessory").style.top = "80px";
+
+      document.getElementById("top").style.left = "100px";
+      document.getElementById("top").style.top = "190px";
+
+      document.getElementById("bottom").style.left = "105px";
+      document.getElementById("bottom").style.top = "300px";
+
+      document.getElementById("gloves").style.left = "85px";
+      document.getElementById("gloves").style.top = "240px";
+
+      document.getElementById("shoes").style.left = "120px";
+      document.getElementById("shoes").style.top = "420px";
+
+      selectedWearItem = null;
+    }
+
+    let dragged = null;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    document.querySelectorAll(".wear-item").forEach(item => {
+      item.addEventListener("mousedown", startDrag);
+      item.addEventListener("touchstart", startDragTouch);
+    });
+
+    function startDrag(e) {
+      if (!e.target.src) return;
+
+      dragged = e.target;
+      selectedWearItem = dragged;
+
+      const rect = dragged.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+    }
+
+    function startDragTouch(e) {
+      if (!e.target.src) return;
+
+      dragged = e.target;
+      selectedWearItem = dragged;
+
+      const touch = e.touches[0];
+      const rect = dragged.getBoundingClientRect();
+      offsetX = touch.clientX - rect.left;
+      offsetY = touch.clientY - rect.top;
+    }
+
+    document.addEventListener("mousemove", function (e) {
+      if (!dragged) return;
+      moveItem(e.clientX, e.clientY);
+    });
+
+    document.addEventListener("touchmove", function (e) {
+      if (!dragged) return;
+      const touch = e.touches[0];
+      moveItem(touch.clientX, touch.clientY);
+    });
+
+    function moveItem(clientX, clientY) {
+      const area = document.querySelector(".fitting-area");
+      const areaRect = area.getBoundingClientRect();
+
+      dragged.style.left = clientX - areaRect.left - offsetX + "px";
+      dragged.style.top = clientY - areaRect.top - offsetY + "px";
+    }
+
+    document.addEventListener("mouseup", function () {
+      dragged = null;
+    });
+
+    document.addEventListener("touchend", function () {
+      dragged = null;
+    });
+  </script>
 </body>
 </html>
